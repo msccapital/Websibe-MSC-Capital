@@ -43,7 +43,8 @@ async function fetchPosts() {
     ...p,
     slug: p.slug || slugifyVN(p.title || ''),
     video: toEmbedUrl(p.video || ''),
-    images: p.images || [],
+    cover: (p.cover || '').replace(/^\/+/, ''),
+    images: (p.images || []).map(src => String(src).replace(/^\/+/, '')),
     content: Array.isArray(p.content)
       ? p.content
       : String(p.content || '').split(/\n\s*\n/).map(x => x.trim().replace(/\n/g, '<br>')).filter(Boolean),
