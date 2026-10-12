@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tin tức thị trường — MSC Capital</title>
+<meta name="description" content="Tổng hợp tin tức chứng khoán từ nhiều nguồn uy tín, cập nhật liên tục theo phong cách AI News.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@500;700;800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="tintuc">
+
+<div id="site-header"></div>
+
+<section class="page-hero">
+  <div class="wrap">
+    <div class="eyebrow">AI News · Tổng hợp tự động</div>
+    <h1>Tin tức thị trường chứng khoán</h1>
+    <p class="lede">Trang này tự động tổng hợp tin từ CafeF, VnExpress Kinh doanh và Vietstock ngay khi bạn mở trang — tương tự cách vận hành của mục AI News trên nền tảng Vietcap. Nhấn vào tin để đọc trọn bài tại nguồn gốc.</p>
+  </div>
+</section>
+
+<section style="border-bottom:none;">
+  <div class="wrap">
+    <div class="head-row">
+      <div class="eyebrow" style="margin:0;">Cập nhật mới nhất</div>
+      <button class="btn btn-outline btn-sm" onclick="loadNews('news-grid')">Tải lại tin tức</button>
+    </div>
+    <div class="grid-3" id="news-grid">
+      <p class="news-loading">Đang tải tin tức mới nhất…</p>
+    </div>
+  </div>
+</section>
+
+<div id="site-footer"></div>
+<script src="js/include.js"></script>
+<script src="js/news.js"></script>
+<script>
+document.addEventListener('partials:ready', () => loadNews('news-grid'));
+</script>
+</body>
+</html>

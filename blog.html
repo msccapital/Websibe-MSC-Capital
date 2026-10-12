@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blog — MSC Capital</title>
+<meta name="description" content="Bài viết, phân tích và video về đầu tư chứng khoán từ đội ngũ MSC Capital.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@500;700;800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="blog">
+
+<div id="site-header"></div>
+
+<section class="page-hero">
+  <div class="wrap">
+    <div class="eyebrow">Blog</div>
+    <h1>Bài viết &amp; video đầu tư từ MSC Capital</h1>
+    <p class="lede">Kiến thức đầu tư, phân tích thị trường và video giải thích ngắn — cập nhật đều đặn, viết bởi đội ngũ tư vấn MSC Capital.</p>
+  </div>
+</section>
+
+<section style="border-bottom:none;">
+  <div class="wrap">
+    <div class="grid-3" id="blog-grid">
+      <p class="news-loading">Đang tải bài viết…</p>
+    </div>
+  </div>
+</section>
+
+<div id="site-footer"></div>
+<script src="js/include.js"></script>
+<script src="js/blog.js"></script>
+<script>
+document.addEventListener('partials:ready', () => loadBlog('blog-grid'));
+</script>
+</body>
+</html>
