@@ -1,37 +1,52 @@
 {
   "posts": [
     {
-      "slug": "5-buoc-xay-danh-muc-dau-tu-cho-nguoi-moi",
       "title": "5 bước xây danh mục đầu tư cho người mới bắt đầu",
-      "excerpt": "Không cần vốn lớn hay hiểu hết mọi chỉ số — chỉ cần đúng thứ tự ưu tiên. Đây là khung 5 bước MSC Capital dùng khi tư vấn cho nhà đầu tư mới.",
       "date": "2026-09-08",
       "author": "Đội ngũ MSC Capital",
       "tag": "Kiến thức đầu tư",
+      "excerpt": "Không cần vốn lớn hay hiểu hết mọi chỉ số — chỉ cần đúng thứ tự ưu tiên. Đây là khung 5 bước MSC Capital dùng khi tư vấn cho nhà đầu tư mới.",
+      "content": "Nhiều nhà đầu tư mới mở tài khoản xong thì lúng túng không biết nên mua mã nào trước. Vấn đề không nằm ở việc chọn cổ phiếu, mà ở việc chưa có một khung xây danh mục rõ ràng.\n\nBước 1 — Xác định số vốn thực sự có thể đầu tư dài hạn, tách bạch với quỹ dự phòng khẩn cấp. Bước 2 — Chọn tỷ trọng giữa cổ phiếu trụ (ngân hàng, bán lẻ, tiện ích) và cổ phiếu tăng trưởng theo khẩu vị rủi ro cá nhân.\n\nBước 3 — Giới hạn số mã nắm giữ ở mức có thể theo dõi được, thường 5–8 mã với tài khoản dưới 500 triệu đồng. Bước 4 — Đặt ngưỡng cắt lỗ và chốt lời trước khi mua, không quyết định cảm tính khi thị trường biến động.\n\nBước 5 — Rà soát danh mục định kỳ mỗi quý thay vì theo dõi biến động từng ngày. Đây là khung tư vấn nền tảng MSC Capital áp dụng cho khách hàng mới — chi tiết theo từng trường hợp, đội ngũ tư vấn sẽ trao đổi trực tiếp khi bạn đăng ký tư vấn miễn phí.",
       "cover": "",
+      "images": [],
       "video": "",
-      "content": "Nhiều nhà đầu tư mới mở tài khoản xong thì lúng túng không biết nên mua mã nào trước. Vấn đề không nằm ở việc chọn cổ phiếu, mà ở việc chưa có một khung xây danh mục rõ ràng.\n\nBước 1 — Xác định số vốn thực sự có thể đầu tư dài hạn, tách bạch với quỹ dự phòng khẩn cấp. Bước 2 — Chọn tỷ trọng giữa cổ phiếu trụ (ngân hàng, bán lẻ, tiện ích) và cổ phiếu tăng trưởng theo khẩu vị rủi ro cá nhân.\n\nBước 3 — Giới hạn số mã nắm giữ ở mức có thể theo dõi được, thường 5–8 mã với tài khoản dưới 500 triệu đồng. Bước 4 — Đặt ngưỡng cắt lỗ và chốt lời trước khi mua, không quyết định cảm tính khi thị trường biến động.\n\nBước 5 — Rà soát danh mục định kỳ mỗi quý thay vì theo dõi biến động từng ngày. Đây là khung tư vấn nền tảng MSC Capital áp dụng cho khách hàng mới — chi tiết theo từng trường hợp, đội ngũ tư vấn sẽ trao đổi trực tiếp khi bạn đăng ký tư vấn miễn phí."
+      "slug": "5-buoc-xay-danh-muc-dau-tu-cho-nguoi-moi"
     },
     {
-      "slug": "margin-la-gi-dung-sao-cho-an-toan",
       "title": "Margin là gì và dùng sao cho an toàn? (Video giải thích)",
-      "excerpt": "Đòn bẩy tài chính là con dao hai lưỡi. MSC Capital giải thích cơ chế margin, call margin và cách kiểm soát rủi ro trong video ngắn dưới đây.",
       "date": "2026-09-03",
       "author": "Đội ngũ MSC Capital",
       "tag": "Video",
+      "excerpt": "Đòn bẩy tài chính là con dao hai lưỡi. MSC Capital giải thích cơ chế margin, call margin và cách kiểm soát rủi ro trong video ngắn dưới đây.",
+      "content": "Giao dịch ký quỹ (margin) cho phép nhà đầu tư vay thêm tiền từ công ty chứng khoán để mua cổ phiếu, dùng chính cổ phiếu đó làm tài sản đảm bảo. Sức mua tăng lên, nhưng rủi ro cũng tăng theo tỷ lệ đòn bẩy.\n\nVideo trên minh hoạ ba khái niệm nhà đầu tư mới dùng margin cần nắm: tỷ lệ ký quỹ ban đầu, ngưỡng gọi ký quỹ (margin call) và thời điểm công ty chứng khoán buộc bán giải chấp.\n\nNguyên tắc MSC Capital khuyên dùng: chỉ dùng margin cho phần vốn có thể chấp nhận mất, ưu tiên các mã thanh khoản cao trong danh mục cho vay ký quỹ, và luôn để một khoảng đệm an toàn trước ngưỡng gọi ký quỹ thay vì canh sát mép.",
       "cover": "",
+      "images": [],
       "video": "https://www.youtube.com/embed/M7lc1UVf-VE",
-      "content": "Giao dịch ký quỹ (margin) cho phép nhà đầu tư vay thêm tiền từ công ty chứng khoán để mua cổ phiếu, dùng chính cổ phiếu đó làm tài sản đảm bảo. Sức mua tăng lên, nhưng rủi ro cũng tăng theo tỷ lệ đòn bẩy.\n\nVideo trên minh hoạ ba khái niệm nhà đầu tư mới dùng margin cần nắm: tỷ lệ ký quỹ ban đầu, ngưỡng gọi ký quỹ (margin call) và thời điểm công ty chứng khoán buộc bán giải chấp.\n\nNguyên tắc MSC Capital khuyên dùng: chỉ dùng margin cho phần vốn có thể chấp nhận mất, ưu tiên các mã thanh khoản cao trong danh mục cho vay ký quỹ, và luôn để một khoảng đệm an toàn trước ngưỡng gọi ký quỹ thay vì canh sát mép."
+      "slug": "margin-la-gi-dung-sao-cho-an-toan"
     },
     {
-      "slug": "3-sai-lam-thuong-gap-khi-bat-dau-dau-tu-chung-khoan",
       "title": "3 sai lầm thường gặp khi bắt đầu đầu tư chứng khoán",
-      "excerpt": "Không phải thị trường khó, mà là cách tiếp cận sai ngay từ đầu. Điểm lại ba sai lầm phổ biến nhất MSC Capital gặp ở khách hàng mới.",
       "date": "2026-08-27",
       "author": "Đội ngũ MSC Capital",
       "tag": "Kiến thức đầu tư",
+      "excerpt": "Không phải thị trường khó, mà là cách tiếp cận sai ngay từ đầu. Điểm lại ba sai lầm phổ biến nhất MSC Capital gặp ở khách hàng mới.",
+      "content": "Sai lầm thứ nhất: đầu tư toàn bộ số vốn ngay trong lần mua đầu tiên, không giữ tiền mặt dự phòng để bình quân giá hoặc chờ cơ hội tốt hơn.\n\nSai lầm thứ hai: chạy theo tin đồn và khuyến nghị trên mạng xã hội mà không tự kiểm tra lại báo cáo tài chính hay yếu tố cơ bản của doanh nghiệp.\n\nSai lầm thứ ba: không đặt kỷ luật cắt lỗ, để một khoản lỗ nhỏ kéo dài thành khoản lỗ lớn vì tâm lý chờ 'về bờ'. Một danh mục tốt cần đi kèm một kỷ luật quản trị rủi ro rõ ràng — đây cũng là phần MSC Capital hỗ trợ sát nhất trong quá trình tư vấn.",
       "cover": "",
+      "images": [],
       "video": "",
-      "content": "Sai lầm thứ nhất: đầu tư toàn bộ số vốn ngay trong lần mua đầu tiên, không giữ tiền mặt dự phòng để bình quân giá hoặc chờ cơ hội tốt hơn.\n\nSai lầm thứ hai: chạy theo tin đồn và khuyến nghị trên mạng xã hội mà không tự kiểm tra lại báo cáo tài chính hay yếu tố cơ bản của doanh nghiệp.\n\nSai lầm thứ ba: không đặt kỷ luật cắt lỗ, để một khoản lỗ nhỏ kéo dài thành khoản lỗ lớn vì tâm lý chờ 'về bờ'. Một danh mục tốt cần đi kèm một kỷ luật quản trị rủi ro rõ ràng — đây cũng là phần MSC Capital hỗ trợ sát nhất trong quá trình tư vấn."
+      "slug": "3-sai-lam-thuong-gap-khi-bat-dau-dau-tu-chung-khoan"
+    },
+    {
+      "title": "Báo cáo Ngành BĐS: Sửa đổi các luật bất động sản nhằm hoàn thiện khung pháp lý và mở rộng cơ hội phát triển.",
+      "date": "2026-10-12",
+      "author": "Lê Đức Lộc",
+      "tag": "Tin MSC Capital",
+      "excerpt": "Triển vọng tích cực cho ngành bất động sản Việt Nam:** Các đề xuất sửa đổi Luật Đất đai, Luật Nhà ở và Luật Kinh doanh Bất động sản được kỳ vọng sẽ tăng cường tính minh bạch, nâng cao hiệu quả sử dụng đất và mở rộng cơ hội phát triển dự án. Các doanh nghiệp có nền tảng tài chính vững mạnh và kinh nghiệm triển khai tốt như VHM, KDH và NLG được đánh giá có lợi thế trong giai đoạn hoàn thiện khung pháp lý.",
+      "content": "Quốc hội dự kiến tổ chức Kỳ họp thứ hai của Quốc hội khóa XVI từ ngày 17/10 đến ngày 20/11/2026. Chương trình họp bao gồm việc xem xét và thông qua các nội dung sửa đổi của ba luật liên quan đến bất động sản gồm Luật Đất đai, Luật Nhà ở và Luật Kinh doanh Bất động sản, sau khi đã được Quốc hội cho ý kiến lần đầu tại kỳ họp không thường lệ thứ nhất vào tháng 8/2026.\n\nTrước đó, Bộ Chính trị đã ban hành Nghị quyết 79-NQ/TW về Kinh tế Nhà nước (ngày 06/01/2026), đặt mục tiêu sửa đổi Luật Đất đai trong năm 2026. Ban Chấp hành Trung ương Đảng sau đó đã ban hành Nghị quyết 21-NQ/TW (ngày 28/07/2026), tiếp theo là Nghị quyết 278/NQ-CP của Chính phủ (ngày 18/09/2026) nhằm đưa ra các định hướng chỉ đạo cho việc sửa đổi Luật Đất đai và các văn bản pháp luật liên quan.\n\nQuan điểm của chúng tôi: Tích cực - Khung pháp lý được hoàn thiện hơn và mở ra các cơ hội phát triển\n\nChúng tôi tiếp tục cho rằng các cải cách pháp lý này cho thấy quyết tâm của Nhà nước trong việc chủ động điều chỉnh chính sách, với định hướng xuyên suốt là nâng cao hiệu quả sử dụng đất, tăng cường tính minh bạch và cải thiện khả năng tiếp cận nhà ở. Các sửa đổi đề xuất được kỳ vọng sẽ góp phần hoàn thiện khung chính sách và nâng cao hiệu quả thực thi các mục tiêu này. Tuy nhiên, do các dự thảo luật hiện vẫn đang trong quá trình xem xét và có thể tiếp tục được điều chỉnh, các đề xuất này nên được xem là định hướng sơ bộ. Trong khi đó, hiệu quả thực thi thực tế sẽ còn phụ thuộc vào các văn bản hướng dẫn chi tiết cũng như mức độ tuân thủ của các bên liên quan, với tác động có sự phân hóa giữa từng doanh nghiệp bất động sản.\n\nQuy định giá đất: Quy định giá đất được đề xuất, dựa trên bảng giá đất và hệ số điều chỉnh, nhằm mang lại phương pháp nhất quán và chuẩn hóa hơn trong việc xác định tiền bồi thường, tiền sử dụng đất và tiền thuê đất. Trong đó, hệ số điều chỉnh giá nhằm đảm bảo tính linh hoạt trong việc phản ánh các thay đổi thực tế của thị trường.\n\nBiện pháp khuyến khích sử dụng đất hiệu quả hơn: Dự thảo Luật Đất đai sửa đổi đề xuất áp dụng mức thu bổ sung hàng năm tăng dần đối với các trường hợp chậm tiến độ sử dụng đất. Bên cạnh đó, Bộ Tài chính cũng đề xuất sửa đổi Luật thuế sử dụng đất phi nông nghiệp, bao gồm mức thuế suất 0,2% đối với đất bỏ hoang, không đưa vào sử dụng hoặc chậm đưa vào sử dụng. Các biện pháp này nhằm hạn chế tình trạng chậm triển khai dự án và thúc đẩy việc triển khai dự án đúng tiến độ, dù vẫn phụ thuộc vào các quy định và khâu thực thi chính thức.\n\nKhả năng tiếp cận nhà ở: Dự thảo Luật Nhà ở sửa đổi giới thiệu một khung pháp lý riêng biệt cho loại hình nhà ở cho thuê, phù hợp với định hướng chính sách của Chính phủ được đưa ra vào tháng 5/2026 nhằm cải thiện khả năng tiếp cận nhà ở. Chúng tôi cho rằng đây là cơ hội để các chủ đầu tư đa dạng hóa danh mục sản phẩm và đáp ứng nhu cầu của các nhóm đối tượng đủ điều kiện, thay vì hàm ý một sự chuyển dịch trên diện rộng từ nhà ở thương mại để bán sang nhà ở cho thuê. Tác động thực tế sẽ phụ thuộc vào các quy định hướng dẫn chi tiết, chính sách ưu đãi đi kèm và mức độ tham gia của các chủ đầu tư.\n\nChúng tôi cũng nhận thấy bối cảnh chính sách đang trở nên thuận lợi hơn dành cho cơ chế phát triển hạ tầng thông qua mô hình PPP, bao gồm các dự án BT; điều này có thể mở rộng cơ hội phát triển đối với các chủ đầu tư, mặc dù mức độ tham gia thực tế nhiều khả năng sẽ phụ thuộc vào năng lực bảng cân đối kế toán, năng lực triển khai dự án và mức độ phù hợp với danh mục dự án của từng doanh nghiệp.\n\nTrong bối cảnh khung pháp lý bất động sản tại Việt Nam đang tiếp tục hoàn thiện theo hướng tuân thủ chặt chẽ hơn và minh bạch hơn, chúng tôi kỳ vọng quá trình chuyển tiếp sang các luật sửa đổi sẽ diễn ra tương đối thuận lợi. Các chủ đầu tư có năng lực tài chính vững mạnh và bề dày kinh nghiệm triển khai dự án — như VHM, KDH và NLG trong danh mục theo dõi của chúng tôi — đã có vị thế thuận lợi để phát triển và khai thác hiệu quả quỹ đất hiện hữu. Khi có hiệu lực, các luật sửa đổi có thể tiếp tục hỗ trợ quá trình triển khai dự án và mở rộng cơ hội phát triển của các doanh nghiệp này.",
+      "cover": "/assets/img/pho-chu-tich-quoc-hoi-nguyen-hong-dien-va-pho-thu-tuong-chinh-phu-ho-quoc-dung-dong-chu-tri-cuoc-hop.jpg",
+      "images": [],
+      "video": "",
+      "slug": "sua-doi-cac-luat-bat-dong-san-nham-hoan-thien-khung-phap-ly-va-mo-rong-co-hoi-phat-trien"
     }
   ]
 }
