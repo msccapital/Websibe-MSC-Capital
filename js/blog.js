@@ -24,9 +24,30 @@ function postThumbHTML(post) {
   return `<div class="post-thumb">${post.cover ? `<img src="${post.cover}" alt="${post.title}" loading="lazy">` : ''}</div>`;
 }
 
+function slugifyVN(s) {
+  return String(s).normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D')
+    .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+}
+
+function toEmbedUrl(url) {
+  if (!url || url.includes('/embed/')) return url || '';
+  const m = url.match(/(?:youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/|live\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/);
+  return m ? `https://www.youtube.com/embed/${m[1]}` : url;
+}
+
 async function fetchPosts() {
   const res = await fetch('data/posts.json');
-  return res.json();
+  const data = await res.json();
+  const list = Array.isArray(data) ? data : (data.posts || []);
+  return list.map(p => ({
+    ...p,
+    slug: p.slug || slugifyVN(p.title || ''),
+    video: toEmbedUrl(p.video || ''),
+    images: p.images || [],
+    content: Array.isArray(p.content)
+      ? p.content
+      : String(p.content || '').split(/\n\s*\n/).map(x => x.trim().replace(/\n/g, '<br>')).filter(Boolean),
+  })).sort((a, b) => new Date(b.date) - new Date(a.date));
 }
 
 async function loadBlog(containerId, limit) {
@@ -72,6 +93,7 @@ async function loadSinglePost() {
       </div>` : (post.cover ? `<img src="${post.cover}" alt="${post.title}" style="margin-bottom:28px; border:1px solid var(--line);">` : '')}
     <div class="post-content">
       ${post.content.map(p => `<p style="max-width:70ch; font-size:16.5px; color:var(--text);">${p}</p>`).join('')}
+      ${(post.images || []).map(src => `<img src="${src}" alt="" loading="lazy" style="margin:22px 0; border:1px solid var(--line);">`).join('')}
     </div>
   `;
 
