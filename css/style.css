@@ -44,7 +44,7 @@ body{
   color: var(--text);
   font-family: var(--font-body);
   font-size: 16px;
-  line-height: 1.8;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
 }
 img{ max-width: 100%; display: block; }
