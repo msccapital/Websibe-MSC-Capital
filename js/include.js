@@ -15,6 +15,7 @@ async function includePartial(selector, url) {
 
 document.addEventListener('DOMContentLoaded', async () => {
   await includePartial('#site-header', 'components/header.html');
+  initTicker();
   await includePartial('#site-footer', 'components/footer.html');
 
   // highlight current nav link
@@ -43,3 +44,34 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   document.dispatchEvent(new CustomEvent('partials:ready'));
 });
+
+
+/* Bảng giá chạy ngang: widget Ticker Tape miễn phí của TradingView.
+   Script phải được tạo bằng JS (không chạy được nếu chèn qua innerHTML).
+   Muốn đổi/thêm mã: sửa mảng symbols bên dưới theo dạng "SÀN:MÃ" (vd HOSE:VNM). */
+function initTicker() {
+  const host = document.getElementById('tv-ticker');
+  if (!host) return;
+  host.innerHTML = '<div class="tradingview-widget-container"><div class="tradingview-widget-container__widget"></div></div>';
+  const s = document.createElement('script');
+  s.src = 'https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js';
+  s.async = true;
+  s.text = JSON.stringify({
+    symbols: [
+      { proName: 'HOSE:VNINDEX', title: 'VN-Index' },
+      { proName: 'HOSE:VN30', title: 'VN30' },
+      { proName: 'HNX:HNXINDEX', title: 'HNX-Index' },
+      { proName: 'HOSE:VCB', title: 'VCB' },
+      { proName: 'HOSE:FPT', title: 'FPT' },
+      { proName: 'HOSE:HPG', title: 'HPG' },
+      { proName: 'HOSE:VNM', title: 'VNM' },
+      { proName: 'HOSE:SSI', title: 'SSI' }
+    ],
+    showSymbolLogo: false,
+    colorTheme: 'dark',
+    isTransparent: true,
+    displayMode: 'adaptive',
+    locale: 'vi_VN'
+  });
+  host.querySelector('.tradingview-widget-container').appendChild(s);
+}
