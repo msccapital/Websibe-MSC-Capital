@@ -25,9 +25,24 @@ function buildProxyUrl(feedUrl) {
 }
 
 function stripHtml(html) {
-  const tmp = document.createElement('div');
-  tmp.innerHTML = html || '';
-  return (tmp.textContent || tmp.innerText || '').trim();
+  const doc = new DOMParser().parseFromString(html || '', 'text/html');
+  return (doc.body.textContent || '').trim();
+}
+
+// Lấy ảnh bìa của tin: ưu tiên trường thumbnail, rồi enclosure, rồi thẻ <img> đầu tiên trong nội dung.
+function extractImage(item) {
+  let url = item.thumbnail || '';
+  if (!url && item.enclosure && item.enclosure.link &&
+      /image|\.(jpe?g|png|webp|gif)/i.test((item.enclosure.type || '') + item.enclosure.link)) {
+    url = item.enclosure.link;
+  }
+  if (!url) {
+    const doc = new DOMParser().parseFromString((item.description || '') + (item.content || ''), 'text/html');
+    const img = doc.querySelector('img');
+    url = img ? (img.getAttribute('src') || img.getAttribute('data-src') || '') : '';
+  }
+  if (url.startsWith('//')) url = 'https:' + url;
+  return url.replace(/^http:\/\//i, 'https://');
 }
 
 function truncate(text, max) {
@@ -45,6 +60,7 @@ async function fetchFeed(feed) {
     desc: truncate(stripHtml(item.description || item.content || ''), 150),
     link: item.link,
     date: item.pubDate,
+    image: extractImage(item),
   }));
 }
 
@@ -52,6 +68,11 @@ function newsCardHTML(item) {
   const dateStr = item.date ? new Date(item.date).toLocaleDateString('vi-VN') : '';
   return `
     <a class="news-card" href="${item.link}" target="_blank" rel="noopener noreferrer">
+      ${item.image ? `<div style="aspect-ratio:16/9; overflow:hidden; margin:-22px -22px 6px; border-bottom:1px solid var(--line); background:var(--panel-alt);">
+        <img src="${item.image}" alt="" loading="lazy" referrerpolicy="no-referrer"
+             style="width:100%; height:100%; object-fit:cover;"
+             onerror="this.parentElement.style.display='none'">
+      </div>` : ''}
       <div class="news-source"><span>${item.source}</span><span>${dateStr}</span></div>
       <h3>${item.title}</h3>
       <p>${item.desc}</p>
