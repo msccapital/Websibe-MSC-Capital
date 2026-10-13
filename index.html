@@ -32,6 +32,38 @@
   </div>
 </section>
 
+<section id="thi-truong">
+  <div class="wrap">
+    <div class="head-row">
+      <div>
+        <div class="eyebrow">Thị trường</div>
+        <h2>Tổng quan thị trường chứng khoán</h2>
+      </div>
+      <p>Các chỉ số chính của thị trường Việt Nam do FireAnt cung cấp. Muốn xem bảng giá đầy đủ, bạn có thể mở bảng giá trực tuyến của Vietcap.</p>
+    </div>
+    <div style="display:flex; gap:32px; flex-wrap:wrap; align-items:flex-start;">
+      <div style="border:1px solid var(--line); background:#fff; max-width:100%; overflow:hidden;">
+        <script src="https://www.fireant.vn/Scripts/web/widgets.js"></script>
+        <div id="fan-quote-142"></div>
+        <script type="text/javascript">
+          try {
+            new FireAnt.MarketsWidget({
+              "container_id": "fan-quote-142",
+              "locale": "vi",
+              "price_line_color": "#71BDDF",
+              "grid_color": "#999999"
+            });
+          } catch (e) { console.warn('Không tải được widget FireAnt', e); }
+        </script>
+      </div>
+      <div style="max-width:420px;">
+        <p>Gồm VN-Index, HNX-Index, UPCOM-Index, VN30 và HNX30. Số liệu mang tính tham khảo, không phải khuyến nghị đầu tư.</p>
+        <a href="https://trading.vietcap.com.vn/priceboard?filter-group=WL&filter-value=116503&view-type=INDUSTRY" target="_blank" rel="noopener" class="btn btn-outline">Bảng giá trực tuyến Vietcap ↗</a>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section id="mo-tai-khoan">
   <div class="wrap">
     <div class="head-row">
