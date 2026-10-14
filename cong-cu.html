@@ -38,6 +38,16 @@
 <section class="page-hero">
   <div class="wrap">
     <div class="eyebrow">Công cụ hỗ trợ</div>
+    <h1>Công cụ hỗ trợ nhà đầu tư</h1>
+    <p class="lede">Các bảng tính toán nhanh giúp bạn đánh giá phương án đầu tư. Kết quả chỉ mang tính tham khảo.</p>
+    <!-- DANH SÁCH CÔNG CỤ: khi thêm công cụ mới, thêm một liên kết như dưới (href trỏ tới id của mục công cụ đó). -->
+    <div class="tool-nav">
+      <span>Công cụ:</span>
+      <a href="#tinh-co-tuc">Tính cổ tức</a>
+    </div>
+  </div>
+</section>
+
 <!-- ===== CÔNG CỤ 01: TÍNH CỔ TỨC ===== -->
 <section id="tinh-co-tuc">
   <div class="wrap">
@@ -56,14 +66,17 @@
         <div class="fld">
           <label for="par">Mệnh giá (VNĐ)</label>
           <input id="par" type="number" inputmode="decimal" min="0" step="any" value="10000">
+          <small id="parHint"></small>
         </div>
         <div class="fld">
           <label for="shares">Số lượng cổ phiếu (nắm giữ hoặc đang lưu hành)</label>
           <input id="shares" type="number" inputmode="decimal" min="0" step="any" value="400">
+          <small id="sharesHint"></small>
         </div>
         <div class="fld">
           <label for="price">Giá trước chia (VNĐ/cổ phiếu)</label>
           <input id="price" type="number" inputmode="decimal" min="0" step="any" value="83650">
+          <small id="priceHint"></small>
         </div>
         <div class="fld">
           <label for="cash">Cổ tức bằng tiền (VNĐ/cổ phiếu)</label>
@@ -83,6 +96,7 @@
         <div class="fld">
           <label for="issuePrice">Giá phát hành thêm (VNĐ/cổ phiếu)</label>
           <input id="issuePrice" type="number" inputmode="decimal" min="0" step="any" value="0">
+          <small id="issueHint"></small>
         </div>
 
         <button type="button" class="btn btn-outline btn-sm" id="resetBtn">Đặt lại ví dụ mẫu</button>
@@ -123,8 +137,8 @@
 const DEFAULTS = { par: 10000, shares: 400, price: 83650, cash: 1000, stockPct: 0, rightsPct: 0, issuePrice: 0 };
 const $ = (id) => document.getElementById(id);
 const num = (id) => { const v = parseFloat($(id).value); return isFinite(v) && v > 0 ? v : 0; };
-// Dấu ngăn cách hàng nghìn: '' = không có dấu (200000000). Muốn có dấu, đổi thành ',' (200,000,000) hoặc ' ' (200 000 000).
-const THOUSANDS = '';
+// Dấu ngăn cách hàng nghìn: '.' = 200.000.000 (kiểu Việt Nam). Đổi thành ',' nếu muốn 200,000,000 hoặc '' nếu không muốn có dấu.
+const THOUSANDS = '.';
 const fmt = (n) => isFinite(n)
   ? String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, THOUSANDS)
   : '—';
@@ -151,7 +165,13 @@ function render() {
   const v = { par: num('par'), shares: num('shares'), price: num('price'), cash: num('cash'),
               stockPct: num('stockPct'), rightsPct: num('rightsPct'), issuePrice: num('issuePrice') };
 
-  $('cashHint').textContent  = v.par > 0 && v.cash > 0 ? `≈ ${(v.cash / v.par * 100).toLocaleString('vi-VN', {maximumFractionDigits: 2})}% mệnh giá` : '';
+  $('parHint').textContent    = v.par > 0 ? fmt(v.par) : '';
+  $('sharesHint').textContent = v.shares > 0 ? fmt(v.shares) : '';
+  $('priceHint').textContent  = v.price > 0 ? fmt(v.price) : '';
+  $('issueHint').textContent  = v.issuePrice > 0 ? fmt(v.issuePrice) : '';
+  $('cashHint').textContent   = v.cash > 0
+    ? fmt(v.cash) + (v.par > 0 ? ` · ≈ ${(v.cash / v.par * 100).toLocaleString('vi-VN', {maximumFractionDigits: 2})}% mệnh giá` : '')
+    : '';
   $('stockHint').textContent = v.stockPct > 0 ? `Cứ 100 cổ phiếu nhận thêm ${v.stockPct.toLocaleString('vi-VN', {maximumFractionDigits: 2})} cổ phiếu` : '';
   $('rightsHint').textContent = v.rightsPct > 0 ? `Cứ 100 cổ phiếu được mua thêm ${v.rightsPct.toLocaleString('vi-VN', {maximumFractionDigits: 2})} cổ phiếu` : '';
 
