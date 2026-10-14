@@ -16,6 +16,7 @@ async function includePartial(selector, url) {
 document.addEventListener('DOMContentLoaded', async () => {
   await includePartial('#site-header', 'components/header.html');
   initTicker();
+  initLanguage();
   await includePartial('#site-footer', 'components/footer.html');
 
   // highlight current nav link
@@ -74,4 +75,54 @@ function initTicker() {
     locale: 'vi_VN'
   });
   host.querySelector('.tradingview-widget-container').appendChild(s);
+}
+
+
+/* ===== Chọn ngôn ngữ (dịch tự động bằng Google Dịch) =====
+   Trang gốc là tiếng Việt. Chọn "EN" sẽ đặt cookie googtrans rồi tải lại trang;
+   script của Google chỉ được tải khi khách chọn ngôn ngữ khác tiếng Việt.
+   Muốn thêm ngôn ngữ: thêm <option value="zh-CN">中文</option> trong components/header.html. */
+function getLangCookie() {
+  const m = document.cookie.match(/(?:^|;\s*)googtrans=([^;]+)/);
+  if (!m) return 'vi';
+  const parts = decodeURIComponent(m[1]).split('/');   // "/vi/en" -> ["", "vi", "en"]
+  return parts[2] || 'vi';
+}
+
+function setLangCookie(lang) {
+  const host = location.hostname;
+  const expired = 'expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/';
+  if (lang === 'vi') {
+    document.cookie = 'googtrans=; ' + expired;
+    document.cookie = 'googtrans=; ' + expired + '; domain=' + host;
+  } else {
+    document.cookie = 'googtrans=/vi/' + lang + '; path=/';
+    document.cookie = 'googtrans=/vi/' + lang + '; path=/; domain=' + host;
+  }
+}
+
+function loadGoogleTranslate() {
+  const box = document.createElement('div');
+  box.id = 'google_translate_element';
+  box.style.cssText = 'position:absolute; left:-9999px; top:0; width:1px; height:1px; overflow:hidden;';
+  document.body.appendChild(box);
+  window.googleTranslateElementInit = function () {
+    new google.translate.TranslateElement({ pageLanguage: 'vi', autoDisplay: false }, 'google_translate_element');
+  };
+  const s = document.createElement('script');
+  s.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+  s.async = true;
+  document.head.appendChild(s);
+}
+
+function initLanguage() {
+  const sel = document.getElementById('langSelect');
+  if (!sel) return;
+  const current = getLangCookie();
+  sel.value = [...sel.options].some(o => o.value === current) ? current : 'vi';
+  sel.addEventListener('change', () => {
+    setLangCookie(sel.value);
+    location.reload();
+  });
+  if (current !== 'vi') loadGoogleTranslate();
 }
