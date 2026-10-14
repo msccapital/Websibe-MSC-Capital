@@ -29,7 +29,7 @@ collections:
                 options: ["Kiến thức đầu tư", "Phân tích thị trường", "Video", "Tin MSC Capital"]
                 default: "Kiến thức đầu tư"
               - { label: Mô tả ngắn, name: excerpt, widget: text, hint: "1-2 câu hiện ở trang danh sách" }
-              - { label: Nội dung, name: content, widget: text, hint: "Mỗi đoạn cách nhau một dòng trống" }
+              - { label: Nội dung, name: content, widget: markdown, hint: "Dùng thanh công cụ để in đậm, in nghiêng, tạo tiêu đề, danh sách và chèn ảnh vào giữa bài" }
               - { label: Ảnh bìa, name: cover, widget: image, required: false }
               - { label: Ảnh thêm cuối bài, name: images, widget: list, field: { label: Ảnh, name: image, widget: image }, required: false }
               - { label: Video YouTube, name: video, widget: string, required: false, hint: "Dán link YouTube bình thường, ví dụ https://www.youtube.com/watch?v=..." }
