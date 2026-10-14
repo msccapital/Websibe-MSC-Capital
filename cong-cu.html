@@ -69,15 +69,15 @@
         </div>
         <div class="fld">
           <label for="shares">Số lượng cổ phiếu (nắm giữ hoặc đang lưu hành)</label>
-          <input id="shares" type="number" inputmode="decimal" min="0" step="any" value="0">
+          <input id="shares" type="number" inputmode="decimal" min="0" step="any" value="400">
         </div>
         <div class="fld">
           <label for="price">Giá trước chia (VNĐ/cổ phiếu)</label>
-          <input id="price" type="number" inputmode="decimal" min="0" step="any" value="0">
+          <input id="price" type="number" inputmode="decimal" min="0" step="any" value="83650">
         </div>
         <div class="fld">
           <label for="cash">Cổ tức bằng tiền (VNĐ/cổ phiếu)</label>
-          <input id="cash" type="number" inputmode="decimal" min="0" step="any" value="0">
+          <input id="cash" type="number" inputmode="decimal" min="0" step="any" value="1000">
           <small id="cashHint"></small>
         </div>
         <div class="fld">
@@ -133,7 +133,11 @@
 const DEFAULTS = { par: 10000, shares: 400, price: 83650, cash: 1000, stockPct: 0, rightsPct: 0, issuePrice: 0 };
 const $ = (id) => document.getElementById(id);
 const num = (id) => { const v = parseFloat($(id).value); return isFinite(v) && v > 0 ? v : 0; };
-const fmt = (n) => isFinite(n) ? Math.round(n).toLocaleString('vi-VN') : '—';
+// Dấu ngăn cách hàng nghìn: '' = không có dấu (200000000). Muốn có dấu, đổi thành ',' (200,000,000) hoặc ' ' (200 000 000).
+const THOUSANDS = '';
+const fmt = (n) => isFinite(n)
+  ? String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, THOUSANDS)
+  : '—';
 
 function compute(v) {
   const r = v.stockPct / 100, q = v.rightsPct / 100;
