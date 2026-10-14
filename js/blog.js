@@ -35,6 +35,90 @@ function toEmbedUrl(url) {
   return m ? `https://www.youtube.com/embed/${m[1]}` : url;
 }
 
+/* ===== Hiển thị nội dung viết bằng trình soạn thảo (Markdown) =====
+   Hỗ trợ: tiêu đề, in đậm, in nghiêng, liên kết, ảnh, danh sách, trích dẫn, đường kẻ, khối mã.
+   Nội dung được "escape" HTML trước nên không chạy được mã lạ. */
+function escHtml(t) {
+  return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+function mdUrl(u) {
+  u = String(u).trim();
+  if (/^(javascript|data|vbscript):/i.test(u)) return '#';
+  return /^\/(?!\/)/.test(u) ? u.replace(/^\/+/, '') : u;      // "/assets/img/x.jpg" -> "assets/img/x.jpg"
+}
+function mdInline(text) {
+  const stash = [];
+  const keep = (html) => '\u0000' + (stash.push(html) - 1) + '\u0000';
+  let t = escHtml(text);
+  t = t.replace(/!\[([^\]]*)\]\(([^)\s]+)(?:\s+&quot;[^&]*&quot;)?\)/g,
+        (m, alt, url) => keep(`<img src="${mdUrl(url)}" alt="${alt}" loading="lazy">`));
+  t = t.replace(/\[([^\]]+)\]\(([^)\s]+)(?:\s+&quot;[^&]*&quot;)?\)/g,
+        (m, txt, url) => keep(`<a href="${mdUrl(url)}" target="_blank" rel="noopener">${txt}</a>`));
+  t = t.replace(/\*\*([^*\n]+)\*\*/g, '<strong>$1</strong>')
+       .replace(/__([^_\n]+)__/g, '<strong>$1</strong>')
+       .replace(/~~([^~\n]+)~~/g, '<del>$1</del>')
+       .replace(/(^|[^*])\*([^*\s][^*\n]*?)\*(?!\*)/g, '$1<em>$2</em>')
+       .replace(/(^|[^\w_])_([^_\s][^_\n]*?)_(?![\w_])/g, '$1<em>$2</em>');
+  return t.replace(/\u0000(\d+)\u0000/g, (m, i) => stash[+i]);
+}
+function renderMarkdown(src) {
+  const lines = String(src || '').replace(/\r\n/g, '\n').split('\n');
+  const out = [];
+  let i = 0;
+  const blank = (l) => !l.trim();
+  const startsBlock = (l) => /^(#{1,6}\s|>|\s*[-*+]\s+|\s*\d+[.)]\s+|```|(-{3,}|\*{3,}|_{3,})\s*$)/.test(l);
+  while (i < lines.length) {
+    const line = lines[i];
+    if (blank(line)) { i++; continue; }
+    let m;
+    if (/^```/.test(line)) {                                    // khối mã
+      const buf = []; i++;
+      while (i < lines.length && !/^```/.test(lines[i])) buf.push(lines[i++]);
+      i++;
+      out.push(`<pre><code>${escHtml(buf.join('\n'))}</code></pre>`);
+    } else if ((m = line.match(/^(#{1,6})\s+(.*)$/))) {         // tiêu đề: # và ## -> h2, ### -> h3, #### trở đi -> h4
+      const lvl = Math.min(Math.max(m[1].length, 2), 4);
+      out.push(`<h${lvl}>${mdInline(m[2])}</h${lvl}>`); i++;
+    } else if (/^(-{3,}|\*{3,}|_{3,})\s*$/.test(line)) {
+      out.push('<hr>'); i++;
+    } else if (/^>/.test(line)) {                               // trích dẫn
+      const buf = [];
+      while (i < lines.length && /^>/.test(lines[i])) buf.push(lines[i++].replace(/^>\s?/, ''));
+      out.push(`<blockquote>${mdInline(buf.join('\n')).replace(/\n/g, '<br>')}</blockquote>`);
+    } else if (/^\s*[-*+]\s+/.test(line)) {                     // danh sách dấu chấm
+      const items = [];
+      while (i < lines.length && /^\s*[-*+]\s+/.test(lines[i])) items.push(lines[i++].replace(/^\s*[-*+]\s+/, ''));
+      out.push('<ul>' + items.map(x => `<li>${mdInline(x)}</li>`).join('') + '</ul>');
+    } else if (/^\s*\d+[.)]\s+/.test(line)) {                   // danh sách đánh số
+      const items = [];
+      while (i < lines.length && /^\s*\d+[.)]\s+/.test(lines[i])) items.push(lines[i++].replace(/^\s*\d+[.)]\s+/, ''));
+      out.push('<ol>' + items.map(x => `<li>${mdInline(x)}</li>`).join('') + '</ol>');
+    } else {                                                    // đoạn văn
+      const buf = [];
+      while (i < lines.length && !blank(lines[i]) && (buf.length === 0 || !startsBlock(lines[i]))) buf.push(lines[i++]);
+      out.push(`<p>${mdInline(buf.join('\n')).replace(/\n/g, '<br>')}</p>`);
+    }
+  }
+  return out.join('\n');
+}
+
+const POST_CSS = `
+.post-content{ max-width:72ch; }
+.post-content p{ max-width:72ch; font-size:16.5px; color:var(--text); line-height:1.8; }
+.post-content h2{ font-size:26px; margin:38px 0 14px; }
+.post-content h3{ font-size:21px; margin:30px 0 12px; }
+.post-content h4{ font-size:18px; margin:26px 0 10px; }
+.post-content strong{ color:#fff; font-weight:700; }
+.post-content a{ color:var(--green-400); text-decoration:underline; }
+.post-content ul, .post-content ol{ max-width:72ch; margin:0 0 1.2em; padding-left:24px; }
+.post-content ul{ list-style:disc; } .post-content ol{ list-style:decimal; }
+.post-content li{ margin-bottom:8px; font-size:16.5px; color:var(--text); line-height:1.7; }
+.post-content blockquote{ margin:24px 0; padding:6px 0 6px 18px; border-left:3px solid var(--orange); color:var(--text-muted); font-size:16.5px; }
+.post-content img{ max-width:100%; height:auto; margin:24px 0; border:1px solid var(--line); }
+.post-content hr{ border:0; border-top:1px solid var(--line); margin:32px 0; }
+.post-content pre{ overflow-x:auto; background:var(--panel-solid); border:1px solid var(--line); padding:14px; font-size:14px; }
+`;
+
 async function fetchPosts() {
   const res = await fetch('data/posts.json');
   const data = await res.json();
@@ -45,9 +129,9 @@ async function fetchPosts() {
     video: toEmbedUrl(p.video || ''),
     cover: (p.cover || '').replace(/^\/+/, ''),
     images: (p.images || []).map(src => String(src).replace(/^\/+/, '')),
-    content: Array.isArray(p.content)
-      ? p.content
-      : String(p.content || '').split(/\n\s*\n/).map(x => x.trim().replace(/\n/g, '<br>')).filter(Boolean),
+    contentHtml: Array.isArray(p.content)
+      ? p.content.map(x => `<p>${x}</p>`).join('')
+      : renderMarkdown(p.content),
   })).sort((a, b) => new Date(b.date) - new Date(a.date));
 }
 
@@ -84,6 +168,13 @@ async function loadSinglePost() {
 
   document.title = `${post.title} — Blog MSC Capital`;
 
+  if (!document.getElementById('post-md-style')) {
+    const st = document.createElement('style');
+    st.id = 'post-md-style';
+    st.textContent = POST_CSS;
+    document.head.appendChild(st);
+  }
+
   el.innerHTML = `
     <span class="post-tag">${post.tag}</span>
     <h1 style="margin-top:14px;">${post.title}</h1>
@@ -93,7 +184,7 @@ async function loadSinglePost() {
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
       </div>` : (post.cover ? `<img src="${post.cover}" alt="${post.title}" style="margin-bottom:28px; border:1px solid var(--line);">` : '')}
     <div class="post-content">
-      ${post.content.map(p => `<p style="max-width:70ch; font-size:16.5px; color:var(--text);">${p}</p>`).join('')}
+      ${post.contentHtml}
       ${(post.images || []).map(src => `<img src="${src}" alt="" loading="lazy" style="margin:22px 0; border:1px solid var(--line);">`).join('')}
     </div>
   `;
