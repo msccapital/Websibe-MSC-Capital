@@ -17,10 +17,36 @@
   @media (max-width:900px){ .nav-links{ inset:76px 0 auto 0; } }
   @media (max-width:1180px){ .logo-img{ height:60px; } .nav{ height:84px; } }
   @media (max-width:900px){ .logo-img{ height:50px; } .nav{ height:76px; } }
+  /* Ô chọn ngôn ngữ */
+  .lang-switch select{ width:auto; background:var(--panel-solid); color:var(--text); border:1px solid var(--line-strong);
+                       padding:8px 10px; font-size:13.5px; font-family:var(--font-mono); cursor:pointer; }
+  /* Ẩn thanh/khung của Google Dịch để không đẩy lệch trang */
+  body{ top:0 !important; }
+  iframe.skiptranslate, .goog-te-banner-frame, #goog-gt-tt, .goog-te-balloon-frame{ display:none !important; }
+  .goog-text-highlight{ background:none !important; box-shadow:none !important; }
+  /* Menu xổ xuống "Công cụ hỗ trợ" (rê chuột vào để mở) */
+  .nav-dropdown{ position:relative; }
+  .chev{ display:inline-block; margin-left:6px; width:0; height:0; vertical-align:middle;
+         border-left:4px solid transparent; border-right:4px solid transparent; border-top:5px solid currentColor;
+         transition:transform .15s ease; }
+  .nav-dropdown:hover .chev, .nav-dropdown:focus-within .chev{ transform:rotate(180deg); }
+  .nav-dd-menu{ position:absolute; top:100%; left:-16px; padding-top:14px; display:none; z-index:60; }
+  .nav-dropdown:hover .nav-dd-menu, .nav-dropdown:focus-within .nav-dd-menu{ display:block; }
+  .dd-box{ min-width:210px; background:var(--panel-solid); border:1px solid var(--line-strong); box-shadow:0 12px 28px rgba(0,0,0,.45); }
+  .nav-links .dd-box a{ display:block; padding:12px 18px; border-bottom:1px solid var(--line); font-size:14px; color:var(--text-muted); white-space:nowrap; }
+  .nav-links .dd-box a:last-child{ border-bottom:none; }
+  .nav-links .dd-box a:hover{ color:var(--text); background:var(--green-900); border-color:var(--line); }
+  @media (max-width:1100px){
+    .nav-dropdown{ width:100%; }
+    .chev{ display:none; }
+    .nav-dd-menu{ position:static; display:block; padding:0; }
+    .dd-box{ min-width:0; background:none; border:none; box-shadow:none; }
+    .nav-links .dd-box a{ padding:12px 0 12px 18px; }
+  }
 </style>
 <header class="site">
   <div class="wrap nav">
-    <a href="index.html" class="logo" aria-label="MSC Capital — Trang chủ">
+    <a href="index.html" class="logo" translate="no" aria-label="MSC Capital — Trang chủ">
       <img src="assets/img/logo-full.png" alt="MSC Capital" class="logo-img">
     </a>
     <nav class="nav-links" id="navLinks">
@@ -29,12 +55,26 @@
       <a href="uu-dai.html" data-nav="uudai">Ưu đãi</a>
       <a href="tin-tuc.html" data-nav="tintuc">Tin tức</a>
       <a href="blog.html" data-nav="blog">Blog</a>
-      <a href="cong-cu.html" data-nav="congcu">Công cụ hỗ trợ</a>
+      <div class="nav-dropdown">
+        <a href="cong-cu.html" data-nav="congcu" class="dd-toggle" aria-haspopup="true">Công cụ hỗ trợ <span class="chev" aria-hidden="true"></span></a>
+        <div class="nav-dd-menu">
+          <div class="dd-box">
+            <a href="cong-cu.html#tinh-co-tuc">Tính cổ tức</a>
+            <!-- THÊM CÔNG CỤ MỚI: sao chép một dòng <a> ở trên, đổi đường dẫn (#id của công cụ) và tên -->
+          </div>
+        </div>
+      </div>
       <a href="tuyen-dung.html" data-nav="tuyendung">Tuyển dụng</a>
       <a href="lien-he.html" data-nav="lienhe">Liên hệ</a>
     </nav>
     <div class="nav-cta">
       <a class="btn btn-primary btn-sm" href="lien-he.html">Đăng ký tư vấn</a>
+      <div class="lang-switch" translate="no">
+        <select id="langSelect" aria-label="Ngôn ngữ / Language" title="Ngôn ngữ / Language">
+          <option value="vi">VI</option>
+          <option value="en">EN</option>
+        </select>
+      </div>
       <button class="nav-toggle" id="navToggle" aria-label="Mở menu" aria-expanded="false">☰</button>
     </div>
   </div>
