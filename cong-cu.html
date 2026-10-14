@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Công cụ hỗ trợ — MSC Capital</title>
+<meta name="description" content="Các công cụ hỗ trợ nhà đầu tư chứng khoán của MSC Capital: tính cổ tức và các bảng tính toán khác.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@500;700;800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<style>
+  .calc-grid{ display:grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items:start; }
+  @media (max-width: 900px){ .calc-grid{ grid-template-columns: 1fr; } }
+  .fld{ margin-bottom: 16px; }
+  .fld small{ display:block; margin-top:6px; font-family: var(--font-mono); font-size:12.5px; color: var(--text-faint); min-height:1em; }
+  .res{ border:1px solid var(--line); }
+  .res-head{ padding:14px 18px; background: var(--green-700); font-family: var(--font-display); font-weight:700; text-align:center; letter-spacing:.02em; }
+  .res-row{ display:flex; justify-content:space-between; align-items:baseline; gap:16px; padding:13px 18px; border-top:1px solid var(--line); font-size:15px; }
+  .res-row span{ color: var(--text-muted); }
+  .res-row b{ font-family: var(--font-mono); font-weight:500; color: var(--text); text-align:right; white-space:nowrap; }
+  .res-row.key{ background: var(--green-900); }
+  .res-row.key span{ color: var(--text); font-weight:600; }
+  .res-row.key b{ color: var(--green-400); font-size:17px; }
+  .res-row.cash{ border-left: 3px solid var(--orange); }
+  .res-row.cash b{ color: var(--orange-200); }
+  #calcMsg{ font-size:13.5px; min-height:1.4em; margin: 12px 0 0; color: var(--orange-200); max-width:none; }
+  section[id]{ scroll-margin-top: 110px; }
+  .tool-nav{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-top:26px; }
+  .tool-nav span{ font-family: var(--font-mono); font-size:12.5px; color: var(--text-faint); margin-right:4px; }
+  .tool-nav a{ border:1px solid var(--line-strong); padding:8px 14px; font-size:14px; font-family: var(--font-display); font-weight:500; }
+  .tool-nav a:hover{ border-color: var(--green-400); color: var(--green-200); }
+</style>
+</head>
+<body data-page="congcu">
+
+<div id="site-header"></div>
+
+<section class="page-hero">
+  <div class="wrap">
+    <div class="eyebrow">Công cụ hỗ trợ</div>
+    <h1>Công cụ hỗ trợ nhà đầu tư</h1>
+    <p class="lede">Các bảng tính toán nhanh giúp bạn đánh giá phương án đầu tư. Kết quả chỉ mang tính tham khảo.</p>
+    <!-- DANH SÁCH CÔNG CỤ: khi thêm công cụ mới, thêm một liên kết như dưới (href trỏ tới id của mục công cụ đó). -->
+    <div class="tool-nav">
+      <span>Công cụ:</span>
+      <a href="#tinh-co-tuc">Tính cổ tức</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CÔNG CỤ 01: TÍNH CỔ TỨC ===== -->
+<section id="tinh-co-tuc">
+  <div class="wrap">
+    <div class="head-row">
+      <div>
+        <div class="eyebrow">Công cụ 01</div>
+        <h2>Tính cổ tức</h2>
+      </div>
+      <p>Nhập giá, số lượng cổ phiếu và phương án chia cổ tức để xem giá sau chia, số lượng cổ phiếu mới, giá trị sau chia và cổ tức nhận về.</p>
+    </div>
+    <div class="calc-grid">
+
+      <div class="card">
+        <h3 style="margin-bottom:18px;">Thông tin đầu vào</h3>
+
+        <div class="fld">
+          <label for="par">Mệnh giá (VNĐ)</label>
+          <input id="par" type="number" inputmode="decimal" min="0" step="any" value="10000">
+        </div>
+        <div class="fld">
+          <label for="shares">Số lượng cổ phiếu (nắm giữ hoặc đang lưu hành)</label>
+          <input id="shares" type="number" inputmode="decimal" min="0" step="any" value="400">
+        </div>
+        <div class="fld">
+          <label for="price">Giá trước chia (VNĐ/cổ phiếu)</label>
+          <input id="price" type="number" inputmode="decimal" min="0" step="any" value="83650">
+        </div>
+        <div class="fld">
+          <label for="cash">Cổ tức bằng tiền (VNĐ/cổ phiếu)</label>
+          <input id="cash" type="number" inputmode="decimal" min="0" step="any" value="1000">
+          <small id="cashHint"></small>
+        </div>
+        <div class="fld">
+          <label for="stockPct">Cổ tức bằng cổ phiếu (%)</label>
+          <input id="stockPct" type="number" inputmode="decimal" min="0" step="any" value="0">
+          <small id="stockHint"></small>
+        </div>
+        <div class="fld">
+          <label for="rightsPct">Phát hành thêm (%)</label>
+          <input id="rightsPct" type="number" inputmode="decimal" min="0" step="any" value="0">
+          <small id="rightsHint"></small>
+        </div>
+        <div class="fld">
+          <label for="issuePrice">Giá phát hành thêm (VNĐ/cổ phiếu)</label>
+          <input id="issuePrice" type="number" inputmode="decimal" min="0" step="any" value="0">
+        </div>
+
+        <button type="button" class="btn btn-outline btn-sm" id="resetBtn">Đặt lại ví dụ mẫu</button>
+        <p id="calcMsg" role="status"></p>
+      </div>
+
+      <div>
+        <div class="res" aria-live="polite">
+          <div class="res-head">TÍNH TOÁN CỔ TỨC</div>
+          <div class="res-row"><span>Giá trị cổ phiếu trước chia (hoặc vốn hóa)</span><b id="oMcapBefore">—</b></div>
+          <div class="res-row key"><span>Số lượng sau chia</span><b id="oSharesAfter">—</b></div>
+          <div class="res-row key"><span>Giá sau chia</span><b id="oPriceAfter">—</b></div>
+          <div class="res-row"><span>Giá trị sau chia</span><b id="oValueAfter">—</b></div>
+          <div class="res-row cash"><span>Cổ tức tiền mặt nhận về</span><b id="oCash">—</b></div>
+          <div class="res-row"><span>Cổ tức cổ phiếu nhận về</span><b id="oBonus">—</b></div>
+          <div class="res-row" id="rowRights" style="display:none;"><span>Cổ phiếu mua thêm / tiền cần bỏ ra</span><b id="oRights">—</b></div>
+        </div>
+
+        <p class="disclaimer" style="margin-top:18px;">
+          Công thức tham khảo: giá sau chia = (giá trước chia − cổ tức tiền + giá phát hành thêm × tỷ lệ phát hành thêm) ÷ (1 + tỷ lệ cổ tức cổ phiếu + tỷ lệ phát hành thêm). Kết quả giả định nhà đầu tư thực hiện toàn bộ quyền mua, số cổ phiếu nhận thêm được làm tròn xuống, chưa trừ thuế và phí. Giá tham chiếu chính thức do Sở Giao dịch Chứng khoán công bố có thể khác do quy tắc làm tròn. Nội dung chỉ mang tính tham khảo, không phải khuyến nghị đầu tư.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===== THÊM CÔNG CỤ MỚI Ở DƯỚI DÒNG NÀY =====
+     Sao chép cả khối <section id="..."> ... </section> ở trên, đổi id, tiêu đề, nội dung.
+     Lưu ý: dùng id và tên biến riêng cho mỗi công cụ để không trùng với công cụ khác. -->
+
+<div id="site-footer"></div>
+<script src="js/include.js"></script>
+<script>
+/* Công cụ 01: Tính cổ tức. Bọc trong (function(){...})() để không trùng tên biến với công cụ khác. */
+(function () {
+/* Công thức: xem chú thích trong trang. Sửa hàm compute() nếu muốn đổi cách tính. */
+const DEFAULTS = { par: 10000, shares: 400, price: 83650, cash: 1000, stockPct: 0, rightsPct: 0, issuePrice: 0 };
+const $ = (id) => document.getElementById(id);
+const num = (id) => { const v = parseFloat($(id).value); return isFinite(v) && v > 0 ? v : 0; };
+const fmt = (n) => isFinite(n) ? Math.round(n).toLocaleString('vi-VN') : '—';
+
+function compute(v) {
+  const r = v.stockPct / 100, q = v.rightsPct / 100;
+  const bonusShares = Math.floor(v.shares * r + 1e-9);
+  const rightShares = Math.floor(v.shares * q + 1e-9);
+  const sharesAfter = v.shares + bonusShares + rightShares;
+  const priceAfter = Math.round((v.price - v.cash + q * v.issuePrice) / (1 + r + q));
+  return {
+    mcapBefore: v.shares * v.price,
+    sharesAfter,
+    priceAfter,
+    valueAfter: sharesAfter * priceAfter,
+    cashReceived: v.shares * v.cash,
+    bonusShares,
+    rightShares,
+    rightCost: rightShares * v.issuePrice
+  };
+}
+
+function render() {
+  const v = { par: num('par'), shares: num('shares'), price: num('price'), cash: num('cash'),
+              stockPct: num('stockPct'), rightsPct: num('rightsPct'), issuePrice: num('issuePrice') };
+
+  $('cashHint').textContent  = v.par > 0 && v.cash > 0 ? `≈ ${(v.cash / v.par * 100).toLocaleString('vi-VN', {maximumFractionDigits: 2})}% mệnh giá` : '';
+  $('stockHint').textContent = v.stockPct > 0 ? `Cứ 100 cổ phiếu nhận thêm ${v.stockPct.toLocaleString('vi-VN', {maximumFractionDigits: 2})} cổ phiếu` : '';
+  $('rightsHint').textContent = v.rightsPct > 0 ? `Cứ 100 cổ phiếu được mua thêm ${v.rightsPct.toLocaleString('vi-VN', {maximumFractionDigits: 2})} cổ phiếu` : '';
+
+  const msg = $('calcMsg');
+  msg.textContent = '';
+  if (v.shares <= 0 || v.price <= 0) {
+    msg.textContent = 'Nhập số lượng cổ phiếu và giá trước chia để xem kết quả.';
+    ['oMcapBefore','oSharesAfter','oPriceAfter','oValueAfter','oCash','oBonus'].forEach(id => $(id).textContent = '—');
+    $('rowRights').style.display = 'none';
+    return;
+  }
+  if (v.cash >= v.price) msg.textContent = 'Cổ tức tiền lớn hơn hoặc bằng giá cổ phiếu, vui lòng kiểm tra lại số liệu.';
+  if (v.rightsPct > 0 && v.issuePrice <= 0) msg.textContent = 'Có phát hành thêm nhưng chưa nhập giá phát hành thêm.';
+
+  const o = compute(v);
+  if (!(o.priceAfter > 0)) { msg.textContent = 'Giá sau chia không hợp lệ, vui lòng kiểm tra lại số liệu.'; return; }
+
+  $('oMcapBefore').textContent  = fmt(o.mcapBefore);
+  $('oSharesAfter').textContent = fmt(o.sharesAfter);
+  $('oPriceAfter').textContent  = fmt(o.priceAfter);
+  $('oValueAfter').textContent  = fmt(o.valueAfter);
+  $('oCash').textContent        = fmt(o.cashReceived);
+  $('oBonus').textContent       = fmt(o.bonusShares);
+
+  const showRights = v.rightsPct > 0;
+  $('rowRights').style.display = showRights ? 'flex' : 'none';
+  if (showRights) $('oRights').textContent = `${fmt(o.rightShares)} cp / ${fmt(o.rightCost)}`;
+}
+
+document.querySelectorAll('.calc-grid input').forEach(el => el.addEventListener('input', render));
+$('resetBtn').addEventListener('click', () => {
+  Object.entries(DEFAULTS).forEach(([k, val]) => { $(k).value = val; });
+  render();
+});
+render();
+
+})();
+</script>
+</body>
+</html>
