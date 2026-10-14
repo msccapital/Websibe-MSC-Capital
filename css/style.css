@@ -30,7 +30,7 @@
 
   --font-display: 'Be Vietnam Pro', 'Inter', sans-serif;
   --font-body:    'Inter', sans-serif;
-  --font-mono:    'IBM Plex Mono', monospace;
+  --font-mono:    'Inter', sans-serif', monospace;
 
   --container: 1180px;
   --radius: 2px; /* sharp, terminal-like edges on purpose */
