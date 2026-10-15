@@ -1,6 +1,6 @@
 backend:
   name: github
-  repo: repo: msccapital/msccapital.github.io
+  repo: msccapital/msccapital.github.io
   branch: main
 
 media_folder: assets/img
