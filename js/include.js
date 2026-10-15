@@ -79,9 +79,9 @@ function initTicker() {
 
 
 /* ===== Chọn ngôn ngữ (dịch tự động bằng Google Dịch) =====
-   Trang gốc là tiếng Việt. Chọn "EN" sẽ đặt cookie googtrans rồi tải lại trang;
+   Trang gốc là tiếng Việt. Chọn ngôn ngữ khác sẽ đặt cookie googtrans rồi tải lại trang;
    script của Google chỉ được tải khi khách chọn ngôn ngữ khác tiếng Việt.
-   Muốn thêm ngôn ngữ: thêm <option value="zh-CN">中文</option> trong components/header.html. */
+   Muốn thêm ngôn ngữ: thêm một dòng <li><button data-lang="fr">...</button></li> trong components/header.html. */
 function getLangCookie() {
   const m = document.cookie.match(/(?:^|;\s*)googtrans=([^;]+)/);
   if (!m) return 'vi';
@@ -116,13 +116,34 @@ function loadGoogleTranslate() {
 }
 
 function initLanguage() {
-  const sel = document.getElementById('langSelect');
-  if (!sel) return;
+  const box = document.querySelector('.lang-switch');
+  if (!box) return;
+  const btn = box.querySelector('.lang-btn');
+  const items = box.querySelectorAll('[data-lang]');
   const current = getLangCookie();
-  sel.value = [...sel.options].some(o => o.value === current) ? current : 'vi';
-  sel.addEventListener('change', () => {
-    setLangCookie(sel.value);
-    location.reload();
+
+  // đánh dấu ngôn ngữ đang dùng
+  items.forEach(i => i.classList.toggle('active', i.dataset.lang === current));
+
+  // điện thoại: bấm 🌐 để mở/đóng menu
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const open = box.classList.toggle('open');
+    btn.setAttribute('aria-expanded', open);
   });
+  document.addEventListener('click', () => {
+    box.classList.remove('open');
+    btn.setAttribute('aria-expanded', 'false');
+  });
+
+  // chọn ngôn ngữ
+  items.forEach(i => i.addEventListener('click', () => {
+    const lang = i.dataset.lang;
+    box.classList.remove('open');
+    if (lang === current) return;
+    setLangCookie(lang);
+    location.reload();
+  }));
+
   if (current !== 'vi') loadGoogleTranslate();
 }
