@@ -17,9 +17,31 @@
   @media (max-width:900px){ .nav-links{ inset:76px 0 auto 0; } }
   @media (max-width:1180px){ .logo-img{ height:60px; } .nav{ height:84px; } }
   @media (max-width:900px){ .logo-img{ height:50px; } .nav{ height:76px; } }
-  /* Ô chọn ngôn ngữ */
-  .lang-switch select{ width:auto; background:var(--panel-solid); color:var(--text); border:1px solid var(--line-strong);
-                       padding:8px 10px; font-size:13.5px; font-family:var(--font-mono); cursor:pointer; }
+
+  /* Nút chọn ngôn ngữ 🌐 (rê chuột vào để sổ danh sách) */
+  .lang-switch{ position:relative; }
+  .lang-btn{ width:42px; height:42px; display:flex; align-items:center; justify-content:center;
+             background:transparent; border:1px solid var(--line-strong); border-radius:var(--radius);
+             font-size:20px; line-height:1; cursor:pointer; color:var(--text);
+             transition:background .15s ease, border-color .15s ease; }
+  .lang-btn:hover{ background:var(--green-900); border-color:var(--green-400); }
+  .lang-menu{ position:absolute; top:100%; right:0; min-width:170px; margin-top:10px; padding:6px 0;
+              background:var(--panel-solid); border:1px solid var(--line-strong); box-shadow:0 12px 28px rgba(0,0,0,.45);
+              opacity:0; visibility:hidden; transform:translateY(6px);
+              transition:opacity .15s ease, transform .15s ease, visibility .15s; z-index:60; }
+  /* cầu nối trong suốt để chuột đi từ nút xuống menu không bị tắt */
+  .lang-menu::before{ content:''; position:absolute; left:0; right:0; top:-12px; height:12px; }
+  .lang-menu button{ display:block; width:100%; padding:10px 18px; background:none; border:none; text-align:left;
+                     color:var(--text-muted); font-family:var(--font-body); font-size:14px; cursor:pointer; white-space:nowrap; }
+  .lang-menu button:hover{ background:var(--green-900); color:var(--text); }
+  .lang-menu button.active{ color:var(--green-400); }
+  .lang-switch.open .lang-menu,
+  .lang-switch:focus-within .lang-menu{ opacity:1; visibility:visible; transform:translateY(0); }
+  /* Rê chuột để mở (chỉ máy có chuột; điện thoại thì bấm vào 🌐) */
+  @media (hover:hover){
+    .lang-switch:hover .lang-menu{ opacity:1; visibility:visible; transform:translateY(0); }
+  }
+
   /* Ẩn thanh/khung của Google Dịch để không đẩy lệch trang */
   body{ top:0 !important; }
   iframe.skiptranslate, .goog-te-banner-frame, #goog-gt-tt, .goog-te-balloon-frame{ display:none !important; }
@@ -72,10 +94,16 @@
     <div class="nav-cta">
       <a class="btn btn-primary btn-sm" href="lien-he.html">Đăng ký tư vấn</a>
       <div class="lang-switch" translate="no">
-        <select id="langSelect" aria-label="Ngôn ngữ / Language" title="Ngôn ngữ / Language">
-          <option value="vi">VI</option>
-          <option value="en">EN</option>
-        </select>
+        <button type="button" class="lang-btn" id="langBtn" aria-label="Ngôn ngữ / Language" title="Ngôn ngữ / Language" aria-haspopup="true" aria-expanded="false">🌐</button>
+        <!-- THÊM NGÔN NGỮ: sao chép một dòng <li>, đổi data-lang (mã Google Dịch: fr, de, es...) và tên hiển thị -->
+        <ul class="lang-menu">
+          <li><button type="button" data-lang="vi">🇻🇳 Tiếng Việt</button></li>
+          <li><button type="button" data-lang="en">🇬🇧 English</button></li>
+          <li><button type="button" data-lang="zh-CN">🇨🇳 中文</button></li>
+          <li><button type="button" data-lang="ja">🇯🇵 日本語</button></li>
+          <li><button type="button" data-lang="ko">🇰🇷 한국어</button></li>
+          <li><button type="button" data-lang="th">🇹🇭 ไทย</button></li>
+        </ul>
       </div>
       <button class="nav-toggle" id="navToggle" aria-label="Mở menu" aria-expanded="false">☰</button>
     </div>
