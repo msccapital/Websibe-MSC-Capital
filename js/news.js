@@ -1,7 +1,9 @@
 /* Tổng hợp tin tức thị trường từ các báo khác (kiểu "AI News").
-   Trang web là tĩnh (GitHub Pages, không có máy chủ), nên việc lấy tin diễn ra ngay trong
-   trình duyệt của người xem:
-     Cách 1: rss2json.com (đổi RSS -> JSON).
+   Thứ tự lấy tin:
+     Cách A (gần real-time): Cloudflare Worker — dán link vào NEWS_API_URL bên dưới. Trang tự làm mới mỗi phút.
+     Cách 0: đọc file data/news.json — do GitHub Actions tự cập nhật mỗi giờ
+                     (.github/workflows/update-news.yml + scripts/fetch_news.py).
+     Cách 1: rss2json.com (đổi RSS -> JSON), chạy trong trình duyệt khi chưa có file trên.
      Cách 2: allorigins.win (lấy RSS thô rồi tự đọc) — chạy khi cách 1 lỗi.
    Tin lấy thành công được lưu trong trình duyệt; nếu lần sau cả hai cách đều lỗi thì hiện
    lại tin đã lưu thay vì tin mẫu. Nếu vẫn không hiện, mở F12 > Console để xem lý do.
@@ -13,6 +15,10 @@ const FEEDS = [
   { name: 'VnExpress Kinh doanh', url: 'https://vnexpress.net/rss/kinh-doanh.rss' },
   { name: 'Vietstock', url: 'https://vietstock.vn/830/chung-khoan.rss' },
 ];
+
+// Dán link Cloudflare Worker vào đây, ví dụ 'https://msc-news.ten-ban.workers.dev'. Để trống nếu chưa dùng.
+const NEWS_API_URL = 'https://msc-news.msccapitall.workers.dev';
+const NEWS_REFRESH_MS = 60 * 1000;     // tự làm mới tin mỗi 60 giây khi đang mở trang
 
 const NEWS_CACHE_KEY = 'msc_news_cache_v1';
 
@@ -45,6 +51,32 @@ function firstImgSrc(html) {
   const doc = new DOMParser().parseFromString(html || '', 'text/html');
   const img = doc.querySelector('img');
   return img ? (img.getAttribute('src') || img.getAttribute('data-src') || '') : '';
+}
+
+/* ---------- Cách A: Cloudflare Worker (gần real-time) ---------- */
+async function fetchApiNews() {
+  const res = await fetch(NEWS_API_URL, { cache: 'no-store' });
+  if (!res.ok) throw new Error('Worker HTTP ' + res.status);
+  const data = await res.json();
+  const items = (data.items || []).filter(x => x && x.title && x.link);
+  if (!items.length) throw new Error('Worker không trả về tin: ' + JSON.stringify(data.sources || []));
+  return items.map(x => ({
+    source: x.source || '', title: x.title, desc: x.desc || '',
+    link: safeHttp(x.link), date: x.date || '', image: safeHttp(x.image || ''),
+  })).filter(x => x.link);
+}
+
+/* ---------- Cách 0: file data/news.json do GitHub Actions cập nhật ---------- */
+async function fetchLocalNews() {
+  const res = await fetch('data/news.json?t=' + Date.now(), { cache: 'no-store' });
+  if (!res.ok) throw new Error('data/news.json HTTP ' + res.status);
+  const data = await res.json();
+  const items = (data.items || []).filter(x => x && x.title && x.link);
+  if (!items.length) throw new Error('data/news.json chưa có tin');
+  return items.map(x => ({
+    source: x.source || '', title: x.title, desc: x.desc || '',
+    link: safeHttp(x.link), date: x.date || '', image: safeHttp(x.image || ''),
+  })).filter(x => x.link);
 }
 
 /* ---------- Cách 1: rss2json ---------- */
@@ -137,32 +169,74 @@ function writeNewsCache(items) {
   try { localStorage.setItem(NEWS_CACHE_KEY, JSON.stringify({ t: Date.now(), items: items.slice(0, 40) })); } catch (e) {}
 }
 
+function sortNews(items) {
+  return items.slice().sort((a, b) => (new Date(b.date) || 0) - (new Date(a.date) || 0));
+}
+
+/* Trả về { items, mode } — mode: 'live' | 'cache' | 'sample' */
+async function getNews() {
+  let items = [];
+  if (NEWS_API_URL) {
+    try { items = await fetchApiNews(); }
+    catch (e) { console.warn('[Tin tức] Worker lỗi:', e.message); }
+  }
+  if (!items.length) {
+    try { items = await fetchLocalNews(); }
+    catch (e) { console.warn('[Tin tức] Chưa đọc được data/news.json:', e.message); }
+  }
+  if (!items.length) {
+    const results = await Promise.allSettled(FEEDS.map(fetchFeed));
+    items = results.filter(r => r.status === 'fulfilled').flatMap(r => r.value).filter(x => x.title && x.link);
+  }
+  if (items.length) {
+    items = sortNews(items);
+    writeNewsCache(items);
+    return { items, mode: 'live' };
+  }
+  const cached = readNewsCache();
+  if (cached) return { items: cached.items, mode: 'cache', cachedAt: cached.t };
+  return { items: FALLBACK_NEWS, mode: 'sample' };
+}
+
+function renderNews(el, res, limit) {
+  const note = (txt) => `<p class="news-empty" style="grid-column:1/-1;">${txt}</p>`;
+  const list = limit ? res.items.slice(0, limit) : res.items;
+  let extra = '';
+  if (res.mode === 'live') {
+    const t = new Date().toLocaleTimeString('vi-VN');
+    extra = note(`Tin tự động làm mới mỗi phút · cập nhật lúc <span class="news-updated">${newsEsc(t)}</span>`);
+  } else if (res.mode === 'cache') {
+    extra = note(`Chưa kết nối được nguồn tin. Đang hiển thị tin đã lưu lúc ${newsEsc(new Date(res.cachedAt).toLocaleString('vi-VN'))}. Bấm "Tải lại tin tức" để thử lại.`);
+  } else {
+    extra = note('Chưa kết nối được nguồn tin nên đang hiển thị tin mẫu. Bấm "Tải lại tin tức" để thử lại.');
+  }
+  el.dataset.sig = res.mode === 'live' ? list.map(x => x.link).join('|') : '';
+  el.innerHTML = list.map(newsCardHTML).join('') + extra;
+}
+
+window.__newsTimers = window.__newsTimers || {};
+
+async function refreshNews(containerId, limit) {
+  const el = document.getElementById(containerId);
+  if (!el || document.hidden) return;
+  try {
+    const res = await getNews();
+    if (res.mode !== 'live') return;                      // lỗi tạm thời: giữ nguyên những gì đang hiện
+    const list = limit ? res.items.slice(0, limit) : res.items;
+    const sig = list.map(x => x.link).join('|');
+    if (sig !== el.dataset.sig) renderNews(el, res, limit);   // chỉ vẽ lại khi có tin mới
+    else {
+      const u = el.querySelector('.news-updated');
+      if (u) u.textContent = new Date().toLocaleTimeString('vi-VN');
+    }
+  } catch (e) { console.warn('[Tin tức] Làm mới lỗi:', e.message); }
+}
+
 async function loadNews(containerId, limit) {
   const el = document.getElementById(containerId);
   if (!el) return;
-  const note = (txt) => `<p class="news-empty" style="grid-column:1/-1;">${txt}</p>`;
-
-  const results = await Promise.allSettled(FEEDS.map(fetchFeed));
-  let items = results.filter(r => r.status === 'fulfilled').flatMap(r => r.value).filter(x => x.title && x.link);
-
-  if (items.length) {
-    items.sort((a, b) => new Date(b.date) - new Date(a.date));
-    writeNewsCache(items);
-    if (limit) items = items.slice(0, limit);
-    el.innerHTML = items.map(newsCardHTML).join('');
-    return;
+  renderNews(el, await getNews(), limit);
+  if (!window.__newsTimers[containerId]) {
+    window.__newsTimers[containerId] = setInterval(() => refreshNews(containerId, limit), NEWS_REFRESH_MS);
   }
-
-  const cached = readNewsCache();
-  if (cached) {
-    const when = new Date(cached.t).toLocaleString('vi-VN');
-    const list = limit ? cached.items.slice(0, limit) : cached.items;
-    el.innerHTML = list.map(newsCardHTML).join('') +
-      note(`Chưa kết nối được nguồn tin. Đang hiển thị tin đã lưu lúc ${newsEsc(when)}. Bấm "Tải lại tin tức" để thử lại.`);
-    return;
-  }
-
-  const sample = limit ? FALLBACK_NEWS.slice(0, limit) : FALLBACK_NEWS;
-  el.innerHTML = sample.map(newsCardHTML).join('') +
-    note('Chưa kết nối được nguồn tin nên đang hiển thị tin mẫu. Bấm "Tải lại tin tức" để thử lại.');
 }
