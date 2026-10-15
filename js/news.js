@@ -146,14 +146,15 @@ async function fetchFeed(feed) {
 function newsCardHTML(item) {
   const d = item.date ? new Date(item.date) : null;
   const dateStr = d && !isNaN(d) ? d.toLocaleDateString('vi-VN') : '';
-  const img = item.image
-    ? `<div style="aspect-ratio:16/9; overflow:hidden; margin:-22px -22px 6px; border-bottom:1px solid var(--line); background:var(--panel-alt);">
-         <img src="${newsEsc(item.image)}" alt="" loading="lazy" referrerpolicy="no-referrer"
-              style="width:100%; height:100%; object-fit:cover;" onerror="this.parentElement.style.display='none'">
-       </div>` : '';
+  const cover = `<div style="aspect-ratio:16/9; position:relative; overflow:hidden; margin:-22px -22px 6px; border-bottom:1px solid var(--line);
+                  background:linear-gradient(135deg, var(--green-900), var(--panel-alt)); display:flex; align-items:center; justify-content:center;">
+       <span style="font-family:var(--font-display); font-weight:800; font-size:17px; letter-spacing:.08em; color:var(--green-200); text-transform:uppercase; padding:0 16px; text-align:center;">${newsEsc(item.source)}</span>
+       ${item.image ? `<img src="${newsEsc(item.image)}" alt="" loading="lazy" referrerpolicy="no-referrer"
+            style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover;" onerror="this.remove()">` : ''}
+     </div>`;
   return `
     <a class="news-card" href="${newsEsc(item.link || '#')}" target="_blank" rel="noopener noreferrer">
-      ${img}
+      ${cover}
       <div class="news-source"><span>${newsEsc(item.source)}</span><span>${newsEsc(dateStr)}</span></div>
       <h3>${newsEsc(item.title)}</h3>
       <p>${newsEsc(item.desc)}</p>
