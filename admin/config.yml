@@ -1,6 +1,6 @@
 backend:
   name: github
-  repo: msccapital/Websibe-MSC-Capital
+  repo: msccapital.github.io
   branch: main
 
 media_folder: assets/img
