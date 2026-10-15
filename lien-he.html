@@ -52,27 +52,26 @@
     </div>
 
     <div>
-      <form class="contact-form" action="https://formsubmit.co/msccapitall@gmail.com" method="POST">
-        <input type="hidden" name="_subject" value="Yêu cầu tư vấn mới từ website MSC Capital">
-        <input type="hidden" name="_template" value="table">
-        <input type="hidden" name="_captcha" value="false">
+      <form class="contact-form" id="leadForm" novalidate>
+        <!-- ô chống spam: người thật không thấy, robot tự điền -->
+        <input type="text" name="website" tabindex="-1" autocomplete="off" style="position:absolute; left:-9999px; width:1px; height:1px;" aria-hidden="true">
         <div class="form-row">
           <div>
             <label for="name">Họ và tên</label>
-            <input id="name" name="Họ và tên" type="text" required placeholder="Nguyễn Văn A">
+            <input id="name" name="name" type="text" required placeholder="Nguyễn Văn A">
           </div>
           <div>
             <label for="phone">Số điện thoại</label>
-            <input id="phone" name="Số điện thoại" type="tel" required placeholder="09xx xxx xxx">
+            <input id="phone" name="phone" type="tel" required placeholder="09xx xxx xxx">
           </div>
         </div>
         <div>
           <label for="email">Email</label>
-          <input id="email" name="Email" type="email" placeholder="ban@vidu.com">
+          <input id="email" name="email" type="email" placeholder="ban@vidu.com">
         </div>
         <div>
           <label for="topic">Bạn quan tâm đến</label>
-          <select id="topic" name="Chủ đề quan tâm">
+          <select id="topic" name="topic">
             <option>Tư vấn danh mục đầu tư</option>
             <option>Giải pháp margin / đòn bẩy</option>
             <option>Trở thành đối tác giới thiệu nhà đầu tư</option>
@@ -82,10 +81,11 @@
         </div>
         <div>
           <label for="message">Nội dung cần tư vấn</label>
-          <textarea id="message" name="Nội dung" placeholder="Cho MSC Capital biết bạn đang cần hỗ trợ điều gì…"></textarea>
+          <textarea id="message" name="message" placeholder="Cho MSC Capital biết bạn đang cần hỗ trợ điều gì…"></textarea>
         </div>
-        <button type="submit" class="btn btn-primary">Gửi yêu cầu tư vấn</button>
-        <p class="form-note">Biểu mẫu gửi trực tiếp về msccapitall@gmail.com qua FormSubmit — không cần máy chủ riêng. Trong lần gửi đầu tiên, vui lòng xác nhận email kích hoạt do FormSubmit gửi tới hộp thư msccapitall@gmail.com.</p>
+        <button type="submit" class="btn btn-primary" id="leadBtn">Gửi yêu cầu tư vấn</button>
+        <p id="formMsg" class="form-note" role="status" style="font-size:14px;"></p>
+        <p class="form-note">Bằng việc gửi thông tin, bạn đồng ý để MSC Capital liên hệ tư vấn qua số điện thoại hoặc email bạn cung cấp. Thông tin chỉ dùng cho mục đích tư vấn.</p>
       </form>
     </div>
 
@@ -94,5 +94,36 @@
 
 <div id="site-footer"></div>
 <script src="js/include.js"></script>
+<script>
+/* Dán link "Web app URL" của Google Apps Script vào dòng dưới (xem hướng dẫn). */
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby88_tvU8KhZqGURBELRxbf_cRy1fjSlY5Vas74YvNY7oD2DY4Z7-gPt-msLxGQWigK6A/exec';
+
+document.getElementById('leadForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const form = e.target, btn = document.getElementById('leadBtn'), msg = document.getElementById('formMsg');
+  if (form.website.value) return;                       // robot -> bỏ qua
+  if (!form.name.value.trim() || !form.phone.value.trim()) {
+    msg.style.color = 'var(--orange-200)'; msg.textContent = 'Vui lòng nhập họ tên và số điện thoại.'; return;
+  }
+  if (SCRIPT_URL.startsWith('DAN_LINK')) {
+    msg.style.color = 'var(--orange-200)'; msg.textContent = 'Biểu mẫu chưa được kết nối. Vui lòng gọi (+84) 329.480.603.'; return;
+  }
+  btn.disabled = true; btn.textContent = 'Đang gửi…'; msg.textContent = '';
+  try {
+    const data = new URLSearchParams(new FormData(form));
+    data.set('page', location.href);
+    await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: data });
+    form.reset();
+    msg.style.color = 'var(--green-400)';
+    msg.textContent = 'Đã gửi thành công. MSC Capital sẽ liên hệ bạn sớm nhất có thể.';
+  } catch (err) {
+    msg.style.color = 'var(--orange-200)';
+    msg.textContent = 'Gửi chưa được. Vui lòng thử lại hoặc gọi (+84) 329.480.603.';
+  } finally {
+    btn.disabled = false; btn.textContent = 'Gửi yêu cầu tư vấn';
+  }
+});
+</script>
+
 </body>
 </html>
