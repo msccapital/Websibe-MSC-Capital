@@ -167,7 +167,7 @@ function readNewsCache() {
   catch (e) { return null; }
 }
 function writeNewsCache(items) {
-  try { localStorage.setItem(NEWS_CACHE_KEY, JSON.stringify({ t: Date.now(), items: items.slice(0, 40) })); } catch (e) {}
+  try { localStorage.setItem(NEWS_CACHE_KEY, JSON.stringify({ t: Date.now(), items: items.slice(0, 300) })); } catch (e) {}
 }
 
 function sortNews(items) {
@@ -199,9 +199,35 @@ async function getNews() {
   return { items: FALLBACK_NEWS, mode: 'sample' };
 }
 
+const NEWS_PAGE_SIZE = 24;     // mỗi lần hiện thêm bao nhiêu tin trên trang Tin tức
+
+function newsSig(items) { return items.length + '|' + items.slice(0, 5).map(x => x.link).join('|'); }
+
+function paintNews(el) {                                   // vẽ trang Tin tức đầy đủ: bộ lọc báo + danh sách + nút "Xem thêm"
+  const st = el._news;
+  const filtered = st.filter === 'all' ? st.items : st.items.filter(x => x.source === st.filter);
+  const shown = filtered.slice(0, st.shown);
+  const counts = {};
+  st.items.forEach(x => { counts[x.source] = (counts[x.source] || 0) + 1; });
+  const chip = (key, label, n) =>
+    `<button type="button" data-news-filter="${newsEsc(key)}" class="btn btn-sm ${st.filter === key ? 'btn-primary' : 'btn-outline'}" style="padding:7px 14px;">${newsEsc(label)} <span class="mono" style="opacity:.7;">${n}</span></button>`;
+  const bar = `<div style="grid-column:1/-1; display:flex; flex-wrap:wrap; gap:8px; margin-bottom:6px;">` +
+    chip('all', 'Tất cả', st.items.length) + Object.keys(counts).map(k => chip(k, k, counts[k])).join('') + `</div>`;
+  const more = filtered.length > shown.length
+    ? `<div style="grid-column:1/-1; text-align:center; margin-top:8px;"><button type="button" class="btn btn-outline" data-news-more>Xem thêm tin (còn ${filtered.length - shown.length})</button></div>` : '';
+  el.innerHTML = bar + shown.map(newsCardHTML).join('') + more + st.note;
+}
+
+function onNewsClick(e) {
+  const el = e.currentTarget, st = el._news;
+  if (!st) return;
+  const f = e.target.closest('[data-news-filter]');
+  if (f) { st.filter = f.dataset.newsFilter; st.shown = NEWS_PAGE_SIZE; paintNews(el); return; }
+  if (e.target.closest('[data-news-more]')) { st.shown += NEWS_PAGE_SIZE; paintNews(el); }
+}
+
 function renderNews(el, res, limit) {
   const note = (txt) => `<p class="news-empty" style="grid-column:1/-1;">${txt}</p>`;
-  const list = limit ? res.items.slice(0, limit) : res.items;
   let extra = '';
   if (res.mode === 'live') {
     const t = new Date().toLocaleTimeString('vi-VN');
@@ -211,8 +237,23 @@ function renderNews(el, res, limit) {
   } else {
     extra = note('Chưa kết nối được nguồn tin nên đang hiển thị tin mẫu. Bấm "Tải lại tin tức" để thử lại.');
   }
-  el.dataset.sig = res.mode === 'live' ? list.map(x => x.link).join('|') : '';
-  el.innerHTML = list.map(newsCardHTML).join('') + extra;
+
+  if (limit) {                                             // khung nhỏ (trang chủ): chỉ vài tin mới nhất
+    const list = res.items.slice(0, limit);
+    el.dataset.sig = res.mode === 'live' ? newsSig(list) : '';
+    el.innerHTML = list.map(newsCardHTML).join('') + extra;
+    return;
+  }
+  const prev = el._news;                                   // trang Tin tức: hiện toàn bộ, giữ nguyên bộ lọc đang chọn
+  el._news = {
+    items: res.items,
+    filter: prev && res.items.some(x => x.source === prev.filter) ? prev.filter : 'all',
+    shown: prev ? prev.shown : NEWS_PAGE_SIZE,
+    note: extra,
+    sig: res.mode === 'live' ? newsSig(res.items) : '',
+  };
+  if (!el._newsBound) { el._newsBound = true; el.addEventListener('click', onNewsClick); }
+  paintNews(el);
 }
 
 window.__newsTimers = window.__newsTimers || {};
@@ -223,9 +264,9 @@ async function refreshNews(containerId, limit) {
   try {
     const res = await getNews();
     if (res.mode !== 'live') return;                      // lỗi tạm thời: giữ nguyên những gì đang hiện
-    const list = limit ? res.items.slice(0, limit) : res.items;
-    const sig = list.map(x => x.link).join('|');
-    if (sig !== el.dataset.sig) renderNews(el, res, limit);   // chỉ vẽ lại khi có tin mới
+    const sig = newsSig(limit ? res.items.slice(0, limit) : res.items);
+    const current = limit ? el.dataset.sig : (el._news && el._news.sig);
+    if (sig !== current) renderNews(el, res, limit);      // chỉ vẽ lại khi có tin mới
     else {
       const u = el.querySelector('.news-updated');
       if (u) u.textContent = new Date().toLocaleTimeString('vi-VN');
